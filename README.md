@@ -1,2 +1,3 @@
-# arquebuse
-E-mail infrastructure testing tool
+# Arquebuse
+
+Email infrastructure testing tool
