@@ -10,6 +10,18 @@ RUN        export GOPATH="/go" && \
            go get && \
            go build -ldflags "-X main.apiVersion=$api_version" -o $GOBIN/arquebuse-api
 
+# Arquebuse-Mail build stage
+
+FROM       golang:alpine AS build-mail-stage
+ARG        mail_version="snapshot"
+RUN        apk --no-cache add build-base git bzr mercurial gcc
+COPY       src/arquebuse-mail /go
+RUN        export GOPATH="/go" && \
+           export GOBIN=$GOPATH/bin && \
+           cd /go/src/github.com/arquebuse/arquebuse-mail/cmd/arquebuse-mail && \
+           go get && \
+           go build -ldflags "-X main.apiVersion=$mail_version" -o $GOBIN/arquebuse-mail
+
 # Arquebuse-UI build stage
 
 FROM       node:latest as build-ui-stage
@@ -37,10 +49,12 @@ RUN        true && \
 
 # Set up configuration and scripts
 
-COPY       conf/arquebuse /etc/arquebuse
+COPY       conf/arquebuse-api /etc/arquebuse-api
+COPY       conf/arquebuse-mail /etc/arquebuse-mail
 COPY       conf/supervisord/supervisord.conf /etc/supervisord/supervisord.conf
 COPY       conf/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY       --from=build-api-stage /go/bin/arquebuse-api /usr/sbin/arquebuse-api
+COPY       --from=build-mail-stage /go/bin/arquebuse-mail /usr/sbin/arquebuse-mail
 COPY       --from=build-ui-stage /app/dist /app
 RUN        chmod +x /usr/sbin/arquebuse-api
 
