@@ -1,3 +1,54 @@
 # Arquebuse
 
-Email infrastructure testing tool
+[![Docker Build](https://img.shields.io/docker/cloud/build/arquebuse/arquebuse)](https://hub.docker.com/r/arquebuse/arquebuse/builds)
+
+Arquebuse is an email infrastructure testing tool with a web UI.
+
+![Outbound view](./img/outbound.png)
+
+With Arquebuse you can:
+
+ * Send emails with custom headers
+ * Target a specific server/port (you don't depend on email routing)
+ * Receive emails from other servers
+ * Display all headers
+ * Check MIME consistency
+ 
+Arquebuse is in its early development stage. Feel free to ask for new features or report issues in the [project issues tracker](https://github.com/arquebuse/arquebuse/issues).
+ 
+# Setup
+ 
+For an easy setup, Arquebuse relies on Docker. Prebuilt versions are published on Docker Hub.
+ 
+After [installing Docker on your system](https://docs.docker.com/get-docker/), just pull the last version of Arquebuse:
+ 
+    docker pull arquebuse/arquebuse
+    
+Then, run the container with http port mapping:
+ 
+    docker run -p 80:80 arquebuse/arquebuse
+ 
+You'll be able to connect to the web UI with [http://localhost](http://localhost) or with your system's IP address.
+ 
+Default credentials are **arquebuse**/**arquebuse** (you are strongly encouraged to change it).
+ 
+To allow Arquebuse to receive emails from other computers add a mapping to Arquebuse internal SMTP server:
+
+    docker run -p 80:80 -p 2525:2525 arquebuse/arquebuse
+    
+You may now send emails to Arquebuse using your system's IP address and port 2525. You can also use the standard SMTP port 25 while using argument *-p 25:2525*.
+
+Note: it may be a bad idea to expose Arquebuse SMTP port directly on Internet as it's not designed to be bullet proof SMTP server. BTW, Arquebuse doesn't relay emails, it only stores received data into json files...
+
+# Usage
+
+To send new emails, go to Outbound and click on the ***New email*** button. You'll have to enter:
+
+ * Destination: destination server or IP address and smtp port
+ * From: sender email address used by SMTP protocol (may be overrided in email headers)
+ * To: recipient email address used by SMTP protocol (may be overrided in email headers)
+ * Data: the raw data you want to send. Data is composed from email headers and text message. Note that you must leave a blank line between headers and text message.
+
+To view received messages, go to Inbound.
+
+Full documentation is available on the main website: [arquebuse.io](https://arquebuse.io)
