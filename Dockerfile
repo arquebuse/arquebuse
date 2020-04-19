@@ -60,5 +60,5 @@ RUN        chmod +x /usr/sbin/arquebuse-api
 
 USER       root
 WORKDIR    /tmp
-EXPOSE     2525, 80
+EXPOSE     2525 80
 CMD        ["/usr/bin/supervisord", "-c", "/etc/supervisord/supervisord.conf"]
