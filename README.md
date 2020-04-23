@@ -1,7 +1,5 @@
 # Arquebuse
 
-[![Docker Build](https://img.shields.io/docker/cloud/build/arquebuse/arquebuse)](https://hub.docker.com/r/arquebuse/arquebuse/builds)
-
 [Arquebuse](https://arquebuse.io) is an email infrastructure testing tool with a web UI.
 
 ![Outbound view](./img/outbound.png)
@@ -9,16 +7,16 @@
 With Arquebuse you can:
 
  * Send emails with custom headers
- * Target a specific server/port (you don't depend on email routing)
+ * Target a specific server/port
  * Receive emails from other servers
  * Display all headers
  * Check MIME consistency
  
-Arquebuse is in its early development stage. Feel free to ask for new features or report issues in the [project issues tracker](https://github.com/arquebuse/arquebuse/issues).
+Arquebuse is in its early development stage. Please consult our [roadmap](https://github.com/orgs/arquebuse/projects/1) and feel free to ask for new features or report issues in the [project issues tracker](https://github.com/arquebuse/arquebuse/issues).
  
 # Setup
  
-For an easy setup, Arquebuse relies on Docker. Prebuilt versions are published on Docker Hub.
+For an easy setup, we publish prebuilt Docker images on [Docker Hub](https://hub.docker.com/r/arquebuse/arquebuse).
  
 After [installing Docker on your system](https://docs.docker.com/get-docker/), just pull the last version of Arquebuse:
  
