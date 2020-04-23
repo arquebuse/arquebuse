@@ -2,7 +2,7 @@
 
 [![Docker Build](https://img.shields.io/docker/cloud/build/arquebuse/arquebuse)](https://hub.docker.com/r/arquebuse/arquebuse/builds)
 
-Arquebuse is an email infrastructure testing tool with a web UI.
+[Arquebuse](https://arquebuse.io) is an email infrastructure testing tool with a web UI.
 
 ![Outbound view](./img/outbound.png)
 
@@ -26,17 +26,17 @@ After [installing Docker on your system](https://docs.docker.com/get-docker/), j
     
 Then, run the container with http port mapping:
  
-    docker run -p 80:80 arquebuse/arquebuse
+    docker run -p 443:443 arquebuse/arquebuse
  
-You'll be able to connect to the web UI with [http://localhost](http://localhost) or with your system's IP address.
+You'll be able to connect to the web UI with [https://localhost](https://localhost) or with your system's IP address. Note: your browser will reject the default self-signed SSL certificate. Take a look at the documentation to see how to use a custom (and valid) SSL certificate.  
  
 Default credentials are **arquebuse**/**arquebuse** (you are strongly encouraged to change it).
  
 To allow Arquebuse to receive emails from other computers add a mapping to Arquebuse internal SMTP server:
 
-    docker run -p 80:80 -p 2525:2525 arquebuse/arquebuse
+    docker run -p 443:443 -p 2525:2525 arquebuse/arquebuse
     
-You may now send emails to Arquebuse using your system's IP address and port 2525. You can also use the standard SMTP port 25 while using argument *-p 25:2525*.
+You can now send emails to Arquebuse using your system's IP address and port 2525. You can also use the standard SMTP port 25 while using argument *-p 25:2525*.
 
 Note: it may be a bad idea to expose Arquebuse SMTP port directly on Internet as it's not designed to be bullet proof SMTP server. BTW, Arquebuse doesn't relay emails, it only stores received data into json files...
 
@@ -45,9 +45,9 @@ Note: it may be a bad idea to expose Arquebuse SMTP port directly on Internet as
 To send new emails, go to Outbound and click on the ***New email*** button. You'll have to enter:
 
  * Destination: destination server or IP address and smtp port
- * From: sender email address used by SMTP protocol (may be overrided in email headers)
- * To: recipient email address used by SMTP protocol (may be overrided in email headers)
- * Data: the raw data you want to send. Data is composed from email headers and text message. Note that you must leave a blank line between headers and text message.
+ * From: sender email address used by SMTP protocol (can be overridden in email headers)
+ * To: recipient email address used by SMTP protocol (can be overridden in email headers)
+ * Data: the raw data you want to send. Data is composed of email headers and text message. Note that you must leave a blank line between headers and text message.
 
 To view received messages, go to Inbound.
 
