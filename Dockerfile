@@ -1,5 +1,3 @@
-ARG        version="snapshot"
-
 # Arquebuse-API/Mail build stage
 
 FROM       golang:alpine AS build-golang-stage
