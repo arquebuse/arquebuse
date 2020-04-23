@@ -1,4 +1,4 @@
-ARG        version="snapshot"
+ARG        version="0.1.0"
 
 # Arquebuse-API/Mail build stage
 
