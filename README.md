@@ -2,7 +2,7 @@
 
 [Arquebuse](https://arquebuse.io) is an email infrastructure testing tool with a web UI.
 
-![Outbound view](./img/outbound.png)
+![Outbound view](https://github.com/arquebuse/arquebuse/blob/master/img/outbound_small.png?raw=true)
 
 With Arquebuse you can:
 
