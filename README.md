@@ -1,6 +1,6 @@
 # Arquebuse
 
-[Arquebuse](https://arquebuse.io) is an email infrastructure testing tool with a web UI.
+[Arquebuse](https://arquebuse.io) is an email infrastructure testing tool with a Web and command line interfaces.
 
 ![Outbound view](./img/outbound.png)
 

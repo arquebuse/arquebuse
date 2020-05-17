@@ -1,7 +1,8 @@
 # Arquebuse-API/Mail build stage
 
 FROM       golang:alpine AS build-golang-stage
-ARG        version="0.1.0"
+ARG        api_version="snapshot"
+ARG        mail_version="snapshot"
 RUN        apk --no-cache add git
 RUN        export GOPATH="/go" && \
            export GOBIN=$GOPATH/bin && \
@@ -11,29 +12,29 @@ RUN        cd /go/src/github.com/arquebuse && \
            git clone https://github.com/arquebuse/arquebuse-api.git && \
            cd arquebuse-api && \
            git fetch && git fetch --tags && \
-           if [ "${version}" != "snapshot" ]; then echo "Checking out tag ${version}"; git checkout ${version}; fi && \
+           if [ "${api_version}" != "snapshot" ]; then echo "Checking out tag ${api_version}"; git checkout ${api_version}; fi && \
            cd cmd/arquebuse-api && \
            go get && \
-           go build -ldflags "-X main.apiVersion=${version}" -o $GOBIN/arquebuse-api
+           go build -ldflags "-X main.apiVersion=${api_version}" -o $GOBIN/arquebuse-api
 RUN        cd /go/src/github.com/arquebuse && \
            git clone https://github.com/arquebuse/arquebuse-mail.git && \
            cd arquebuse-mail && \
            git fetch && git fetch --tags && \
-           if [ "${version}" != "snapshot" ]; then echo "Checking out tag ${version}"; git checkout ${version}; fi && \
+           if [ "${mail_version}" != "snapshot" ]; then echo "Checking out tag ${mail_version}"; git checkout ${mail_version}; fi && \
            cd cmd/arquebuse-mail && \
            go get && \
-           go build -ldflags "-X main.mailVersion=${version}" -o $GOBIN/arquebuse-mail
+           go build -ldflags "-X main.mailVersion=${mail_version}" -o $GOBIN/arquebuse-mail
 
 
 # Arquebuse-UI build stage
 
 FROM       node:latest as build-ui-stage
-ARG        version="0.1.0"
+ARG        ui_version="snapshot"
 WORKDIR    /app
 RUN        git config --global advice.detachedHead false && \
            git clone https://github.com/arquebuse/arquebuse-ui.git /app && \
            git fetch && git fetch --tags && \
-           if [ "${version}" != "snapshot" ]; then echo "Checking out tag ${version}"; git checkout ${version}; fi && \
+           if [ "${ui_version}" != "snapshot" ]; then echo "Checking out tag ${ui_version}"; git checkout ${ui_version}; fi && \
            npm install && \
            npm run build
 

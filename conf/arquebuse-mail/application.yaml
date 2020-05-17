@@ -1,6 +1,6 @@
-dataPath: "/data/arquebuse-mail"
+dataPath: "/data"
 receiver:
-  listenOn:          "127.0.0.1:2525"
+  listenOn:          "0.0.0.0:2525"
   domain:            "localhost"
   readTimeout:       20
   writeTimeout:      20
