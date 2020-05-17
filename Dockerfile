@@ -1,8 +1,8 @@
 # Arquebuse-API/Mail build stage
 
 FROM       golang:alpine AS build-golang-stage
-ARG        api_version="snapshot"
-ARG        mail_version="snapshot"
+ARG        api_version="0.1.1"
+ARG        mail_version="0.1.0"
 RUN        apk --no-cache add git
 RUN        export GOPATH="/go" && \
            export GOBIN=$GOPATH/bin && \
@@ -29,7 +29,7 @@ RUN        cd /go/src/github.com/arquebuse && \
 # Arquebuse-UI build stage
 
 FROM       node:latest as build-ui-stage
-ARG        ui_version="snapshot"
+ARG        ui_version="0.1.0"
 WORKDIR    /app
 RUN        git config --global advice.detachedHead false && \
            git clone https://github.com/arquebuse/arquebuse-ui.git /app && \
