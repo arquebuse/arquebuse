@@ -1,35 +1,42 @@
 # Arquebuse-API/Mail build stage
 
 FROM       golang:alpine AS build-golang-stage
-ARG        api_version="0.1.1"
-ARG        mail_version="0.1.0"
-RUN        apk --no-cache add git
-RUN        export GOPATH="/go" && \
-           export GOBIN=$GOPATH/bin && \
-           git config --global advice.detachedHead false && \
-           mkdir -p /go/src/github.com/arquebuse
-RUN        cd /go/src/github.com/arquebuse && \
-           git clone https://github.com/arquebuse/arquebuse-api.git && \
+ARG        api_version="snapshot"
+ARG        mail_version="snapshot"
+WORKDIR    /go/src/github.com/arquebuse
+RUN        apk --no-cache add git && \
+           git config --global advice.detachedHead false
+RUN        git clone https://github.com/arquebuse/arquebuse-api.git && \
            cd arquebuse-api && \
            git fetch && git fetch --tags && \
            if [ "${api_version}" != "snapshot" ]; then echo "Checking out tag ${api_version}"; git checkout ${api_version}; fi && \
+           git_commit=$(git rev-parse --short HEAD) && \
+           build_time=$(date +%Y.%m.%d-%H:%M:%S) && \
            cd cmd/arquebuse-api && \
            go get && \
-           go build -ldflags "-X main.apiVersion=${api_version}" -o $GOBIN/arquebuse-api
+           CGO_ENABLED=0 go build -a -ldflags "-s -w \
+            -X github.com/arquebuse/arquebuse-api/pkg/version.GitCommit=${git_commit} \
+            -X github.com/arquebuse/arquebuse-api/pkg/version.Version=${api_version} \
+            -X github.com/arquebuse/arquebuse-api/pkg/version.BuildTime=${build_time}" -o /tmp/arquebuse-api
 RUN        cd /go/src/github.com/arquebuse && \
            git clone https://github.com/arquebuse/arquebuse-mail.git && \
            cd arquebuse-mail && \
            git fetch && git fetch --tags && \
            if [ "${mail_version}" != "snapshot" ]; then echo "Checking out tag ${mail_version}"; git checkout ${mail_version}; fi && \
+           git_commit=$(git rev-parse --short HEAD) && \
+           build_time=$(date +%Y.%m.%d-%H:%M:%S) && \
            cd cmd/arquebuse-mail && \
            go get && \
-           go build -ldflags "-X main.mailVersion=${mail_version}" -o $GOBIN/arquebuse-mail
+           CGO_ENABLED=0 go build -a -ldflags "-s -w \
+            -X github.com/arquebuse/arquebuse-mail/pkg/version.GitCommit=${git_commit} \
+            -X github.com/arquebuse/arquebuse-mail/pkg/version.Version=${mail_version} \
+            -X github.com/arquebuse/arquebuse-mail/pkg/version.BuildTime=${build_time}" -o /tmp/arquebuse-mail
 
 
 # Arquebuse-UI build stage
 
 FROM       node:latest as build-ui-stage
-ARG        ui_version="0.1.0"
+ARG        ui_version="snapshot"
 WORKDIR    /app
 RUN        git config --global advice.detachedHead false && \
            git clone https://github.com/arquebuse/arquebuse-ui.git /app && \
@@ -62,8 +69,8 @@ COPY       conf/arquebuse-mail /etc/arquebuse-mail
 COPY       conf/supervisord/supervisord.conf /etc/supervisord/supervisord.conf
 COPY       conf/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY       conf/nginx/ssl /etc/nginx/ssl
-COPY       --from=build-golang-stage /go/bin/arquebuse-api /usr/sbin/arquebuse-api
-COPY       --from=build-golang-stage /go/bin/arquebuse-mail /usr/sbin/arquebuse-mail
+COPY       --from=build-golang-stage /tmp/arquebuse-api /usr/sbin/arquebuse-api
+COPY       --from=build-golang-stage /tmp/arquebuse-mail /usr/sbin/arquebuse-mail
 COPY       --from=build-ui-stage /app/dist /app
 
 
